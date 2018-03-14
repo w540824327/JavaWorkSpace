@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>报警通讯系统</title>
+    <link rel="stylesheet" href="./css/base.css" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" href="./css/xitong.css" th:href="@{/css/xitong.css}"/>
+    <link rel="stylesheet" href="./css/dialog.css" th:href="@{/css/dialog.css}"/>
+    <script src="./js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+    <script src="./js/dialog.js" th:src="@{/js/dialog.js}"></script>
+    <script src="./js/jquery-1.8.2.min.js" th:src="@{/js/jquery-1.8.2.min.js}"></script>
+    <script src="./js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="./js/main.js" th:src="@{/js/main.js}"></script>
+    <script>
+    // 添加的弹窗
+	function addDlg() {
+	    myDialog.show({
+	        eleId: 'add-dlg',
+	        title: '手机信息添加',
+	        width: 360
+	    });
+	}
+	// 修改弹窗以及回显
+	function editDlg(id) {
+		var action = getDomain() + "/target/get?id=" + id;
+		$.get(action, function(data) {
+			if(data != null) {
+				$("#edit-dlg input[name='id']").val(data.id);
+				$("#edit-dlg input[name='name']").val(data.name);
+				$("#edit-dlg input[name='targetPhone']").val(data.targetPhone);
+				$("#edit-dlg input[name='smsPrice']").val(data.smsPrice)
+				$("#edit-dlg input[name='prepayMoney']").val(data.prepayMoney)
+				$("#edit-dlg select[name='smsSend']").val(data.smsSend)
+			}
+		});
+	    myDialog.show({
+	        eleId: 'edit-dlg',
+	        title: '用户修改',
+	        width: 360
+	    });
+	}
+    </script>
+</head>
+<body>
+<div id="alarm-app">
+    <div class="xitong_head" th:include="common/header :: header"></div>
+    <div class="xitong-con" th:include="common/nav :: nav"></div>
+    <div class="xitong_body">
+        <div class="xtbody_head">
+            <button th:if="${session.WEBSITE_USER.userType == '0'}" class="bu1" type="button" onclick="addDlg()">新增</button>
+            <button th:if="${session.WEBSITE_USER.userType == '0'}" class="bu2" type="button" onclick="deleteDataList('/target/delete')">批量删除</button>
+        </div>
+        <div class="xtbody_con">
+            <table id="datalist-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr height="42px">
+                    <td th:if="${session.WEBSITE_USER.userType == '0'}" width="5%">
+                        <input id="selectall-checkbox" style="margin-left: 20px;" type="checkbox" class="checkbox"/>
+                    </td>
+                    <td width="5%">
+                        <p>序号</p>
+                    </td>
+                    <td width="8%">
+                        <p>姓名</p>
+                    </td>
+                    <td width="15%">
+                        <p>目标手机号</p>
+                    </td>
+                    <td width="7%">
+                        <p>短信累计</p>
+                    </td>
+                    <td width="7%">
+                        <p>短信单价</p>
+                    </td>
+                    <td width="9%">
+                        <p>总价</p>
+                    </td>
+                    <td width="8%">
+                        <p>余额</p>
+                    </td>
+                     <td width="7%">
+                        <p>短信转发</p>
+                    </td>
+                    <td width="14%">
+                        <p>操作</p>
+                    </td>
+                </tr>
+
+                <tr th:each="phone, iterStat : ${pagination.recordList}">
+                    <td th:if="${session.WEBSITE_USER.userType == '0'}">
+                        <input th:value="${phone.id}" style="margin-left: 20px;" type="checkbox" class="checkbox"/>
+                    </td>
+                    <td>
+                        <p th:text="${iterStat.count + (pagination.currentPage - 1) * pagination.pageSize}">1</p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.name}">李明</p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.targetPhone}">13931223100</p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.smsCount}"></p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.smsPrice}">13931223100</p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.smsCount != 0} ? ${#numbers.formatDecimal(phone.smsPrice * phone.smsCount, 1, 3)} : '0'">13931223100</p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.remainMoney}">13931223100</p>
+                    </td>
+                    <td>
+                        <p th:text="${phone.smsSend == '1' ? '是' : '否'}">13931223100</p>
+                    </td>
+                    <td>
+                        <p>
+                            <a  th:href="@{'/myref/list?id=' + ${phone.id}}">
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" src="./images/relative.png" th:src="@{/images/relative.png}" alt="" title="关联" style="cursor: pointer"/>
+                            </a>
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" class="editimg" src="./images/edit-icon.png" th:src="@{/images/edit-icon.png}" th:onclick="'editDlg(' + ${phone.id} + ')'" alt="" title="修改" style="cursor: pointer"/>
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" class="deleteimg" src="./images/delete-icon.png" th:src="@{/images/delete-icon.png}" th:onclick="'deleteRecord(&quot;/target/delete&quot;,' + ${phone.id} +')'" alt="" title="删除" style="cursor: pointer"/>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+             <!-- 分页 -->
+			<div class="page" th:include="common/pagination :: pagination"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加手机  -->
+<div id="add-dlg" class="alert-add" style="display: none;">
+	<form id='addPhone-form' th:action="@{/target/add}" method="post">
+	    <table border="0" cellspacing="0" cellpadding="0" width="330">
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4; text-align: right;">
+	                <label>姓名：</label>
+	            </td>
+	            <td colspan="3">
+	                <input name="name" type="text" width="35%" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>目标手机号：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="targetPhone" type="text" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>短信单价：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="smsPrice" type="text" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>预付金额：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="prepayMoney" type="text" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>转发控制：</label>
+	            </td>
+	            <td width="35%">
+	                <select name="smsSend" style="display: inline-block;" required="required">
+	                    <option value="1">是</option>
+	                    <option value="0">否</option>
+	                </select>
+	            </td>
+	        </tr>
+	    </table>
+    </form>
+    <button id="rest-addPhone" class="but2" type="button">重置</button>
+    <button id="ok-addPhone" class="but3" type="button">添加</button>
+</div>
+
+
+<!-- 修改目标手机信息 -->
+<div id="edit-dlg" class="alert-edit" style="display: none;">
+    <form id="editPhone-form">
+	    <input type="hidden" name="id"/>
+	    <table border="0" cellspacing="0" cellpadding="0" width="330">
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4; text-align: right;">
+	                <label>姓名：</label>
+	            </td>
+	            <td colspan="3">
+	                <input name="name" type="text" width="35%" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>目标手机号：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="targetPhone" type="text" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>短信单价：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="smsPrice" type="text" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>充值金额：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="prepayMoney" type="text" required = "required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	        	<td width="20%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>转发控制：</label>
+	            </td>
+	            <td width="35%">
+	                <select name="smsSend" style="display: inline-block;" required="required">
+	                    <option value="0">否</option>
+	                    <option value="1">是</option>
+	                </select>
+	            </td>
+	        </tr>
+	    </table>
+    </form>
+    <button id="reset-editPhone" class="but1" type="button">重置</button>
+    <button id="ok-editPhone" class="but2" type="button">确定</button>
+</div>
+<div id="editPassword-dlg" class="alert-editpass" style="display: none;" th:include="common/editpass :: editpass"></div>
+</body>
+</html>

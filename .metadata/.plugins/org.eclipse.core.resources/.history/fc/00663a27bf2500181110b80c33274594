@@ -1,0 +1,12 @@
+package com.csdn.springboot.controller.copy;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+@RestController
+public class TestController {
+	
+	@GetMapping("/helloworld")
+	public String helloworld() {
+		
+		return "helloworld";
+	}
+}

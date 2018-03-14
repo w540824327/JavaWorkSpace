@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>报警通讯系统</title>
+    <link rel="stylesheet" href="./css/base.css" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" href="./css/xitong.css" th:href="@{/css/xitong.css}"/>
+    <link rel="stylesheet" href="./css/dialog.css" th:href="@{/css/dialog.css}"/>
+    <script src="./js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+    <script src="./js/dialog.js" th:src="@{/js/dialog.js}"></script>
+    <script src="./js/jquery-1.8.2.min.js" th:src="@{/js/jquery-1.8.2.min.js}"></script>
+    <script src="./js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="./js/main.js" th:src="@{/js/main.js}"></script>
+    <script>
+	 	// 添加用户弹窗
+	    function addDlg() {
+	        myDialog.show({
+	            eleId: 'add-dlg',
+	            title: '用户添加',
+	            width: 360
+	        });
+	    }
+	
+	    // 修改用户弹窗
+	    function editDlg(id) {
+	    	var action = getDomain() + "/user/get?id=" + id;
+	    	$.get(action, function(data) {
+	    		if(data != null) {
+	    			$('#edituser-form').find('input[name=id]').val(data.id);
+	    			$('#edituser-form').find('input[name=username]').val(data.username);
+	    			$('#edituser-form').find('select[name=userType]').val(data.userType);
+	    		}
+	    	});
+	        myDialog.show({
+	            eleId: 'edit-dlg',
+	            title: '用户修改',
+	            width: 360
+	        });
+	    }
+    </script>
+</head>
+<body>
+<div id="alarm-app">
+    <div class="xitong_head" th:include="common/header :: header"></div>
+    <div class="xitong-con" th:include="common/nav :: nav"></div>
+    <div class="xitong_body">
+        <div class="xtbody_head">
+            <button th:if="${session.WEBSITE_USER.userType == '0'}" class="bu1" type="button" onclick="addDlg()">新增</button>
+            <button th:if="${session.WEBSITE_USER.userType == '0'}" class="bu1" type="button" onclick="deleteDataList('/user/delete')" style="margin-left: 20px">批量删除</button>
+        </div>
+        <div class="xtbody_con">
+            <table id="datalist-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td width="5%">
+                        <input id="selectall-checkbox" style="margin-left: 20px;" type="checkbox" class="checkbox"/>
+                    </td>
+                    <td width="5%">
+                        <p>序号</p>
+                    </td>
+                    <td width="18%">
+                        <p>用户名</p>
+                    </td>
+                    <td>
+                        <p>用户类型</p>
+                    </td>
+                    <td width="14%">
+                        <p>操作</p>
+                    </td>
+                </tr>
+
+                <tr th:each="user,iterStat : ${pagination.recordList}">
+                    <td>
+                        <input style="margin-left: 20px;" type="checkbox" th:value="${user.id}" class="checkbox"/>
+                    </td>
+                    <td>
+                        <p th:text="${iterStat.count + (pagination.currentPage - 1) * pagination.pageSize}">1</p>
+                    </td>
+                    <td>
+                        <p th:text="${user.username}">admin</p>
+                    </td>
+                    <td>
+                    	<p th:text="${user.userType == '0' ? '管理员' : '普通用户'}">管理员 </p>
+                    </td>
+                    <td>
+                        <p>
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" src="./images/view-icon.png" th:src="@{/images/resetpass.png}" th:onclick="'resetPassword(' + ${user.id} + ')'" alt="" title="重置密码" style="cursor: pointer; width: 18px; height: 18px;"/>
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" class="editimg" src="./images/edit-icon.png" th:src="@{/images/edit-icon.png}" th:onclick="'editDlg(' + ${user.id} + ')'" alt="" title="修改" style="cursor: pointer"/>
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" class="deleteimg" src="./images/delete-icon.png" th:src="@{/images/delete-icon.png}" th:onclick="'deleteRecord(&quot;/user/delete&quot;,' + ${user.id} + ')'" alt="" title="删除" style="cursor: pointer"/>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+             <!-- 分页 -->
+			<div class="page" th:include="common/pagination :: pagination"></div>
+        </div>
+    </div>
+</div>
+<!-- 添加   -->
+<div id="add-dlg" class="alert-add" style="display: none;">
+	<form id='adduser-form' th:action="@{/user/add}" method="post">
+	    <table border="0" cellspacing="0" cellpadding="0" width="330">
+	        <tr>
+	            <td width="15%" height="40" style="background: #f4f4f4; text-align: right;">
+	                <label>用户名：</label>
+	            </td>
+	            <td colspan="3">
+	                <input name="username" type="text" width="35%" required="required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="15%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>密码：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <input name="password" type="password" required="required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="15%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>类型：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <select name="userType" style="display: inline-block;" required="required">
+	                    <option value="0">管理员</option>
+	                    <option value="1">普通用户</option>
+	                </select>
+	            </td>
+	        </tr>
+	    </table>
+    </form>
+    <button id="reset-adduser" class="but3" type="button">重置</button>
+    <button id="ok-adduser" class="but2" type="button">添加</button>
+</div>
+<!-- 修改 -->
+<div id="edit-dlg" class="alert-edit" style="display: none;">
+	<form id="edituser-form">
+		<input type="hidden" name="id"/>
+	    <table border="0" cellspacing="0" cellpadding="0" width="330">
+	        <tr>
+	            <td width="15%" height="40" style="background: #f4f4f4; text-align: right;">
+	                <label>用户名：</label>
+	            </td>
+	            <td colspan="3">
+	                <input name="username" type="text" width="35%" required="required"/>
+	            </td>
+	        </tr>
+	        <tr>
+	            <td width="15%" height="40" style="background: #f4f4f4;text-align: right;">
+	                <label>类型：</label>
+	            </td>
+	            <td colspan="3" width="35%">
+	                <select name="userType" class="suoshu" style="display: inline-block;" required="required">
+	                    <option value="0">管理员</option>
+	                    <option value="1">普通用户</option>
+	                </select>
+	            </td>
+	        </tr>
+	    </table>
+    </form>
+    <button id="reset-edituser" class="but1" type="button">重置</button>
+    <button id="ok-edituser" class="but2" type="button">确定</button>
+</div>
+<div id="editPassword-dlg" class="alert-editpass" style="display: none;" th:include="common/editpass :: editpass"></div>
+</body>
+</html>

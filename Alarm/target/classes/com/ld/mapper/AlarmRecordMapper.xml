@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.AlarmRecordMapper" >
+	<resultMap id="BaseResultMap" type="com.ld.model.AlarmRecord">
+	   	<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="alarm_type" property="alarmType"/>
+		<result column="alarm_time" property="alarmTime"/>
+		<result column="front_phone" property="frontPhone"/>
+		<result column="battery1" property="battery1"/>
+		<result column="battery2" property="battery2"/>
+		<result column="battery3" property="battery3"/>
+		<result column="install_position" property="installPosition"/>
+		<result column="install_time" property="installTime"/>
+		<result column="type" property="type"/>
+	</resultMap>
+
+  <!-- 分页查询报警流水记录 -->
+  <select id="listAlarmRecord" resultMap="BaseResultMap">
+  	SELECT id, front_phone, install_position, alarm_type, alarm_time
+  	FROM tb_alarm_info ORDER BY id DESC
+  	LIMIT #{pageNum}, #{pageSize}
+  </select>
+  
+  <!-- 总数 -->
+  <select id="countAlarmRecord" resultType="long">
+  	SELECT COUNT(*) FROM tb_alarm_info
+  </select>
+  
+  <delete id="deleteAlarmRecordById">
+  	DELETE FROM tb_alarm_info
+  	WHERE id=#{id}
+  </delete>
+  
+  <!-- 每个前端设备的告警总数  dlw-->
+  <select id="countAlarmNum" resultType="long">
+  	SELECT COUNT(*) FROM tb_alarm_info WHERE front_phone = #{frontPhone} AND type = '1';
+  </select>
+  
+  <!-- 当月自检次数 -->
+  <select id="checkCount" resultType="long">
+  	SELECT COUNT(*) FROM tb_alarm_info WHERE front_phone = #{frontPhone} AND type = '2' AND alarm_time BETWEEN #{startDate} AND #{endDate};
+  </select>
+</mapper>

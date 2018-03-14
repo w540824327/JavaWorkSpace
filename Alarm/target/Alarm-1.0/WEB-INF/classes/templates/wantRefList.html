@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>报警通讯系统</title>
+	<link rel="stylesheet" href="./css/base.css" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" href="./css/xitong.css" th:href="@{/css/xitong.css}"/>
+    <link rel="stylesheet" href="./css/dialog.css" th:href="@{/css/dialog.css}"/>
+    <script src="./js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+    <script src="./js/dialog.js" th:src="@{/js/dialog.js}"></script>
+    <script src="./js/jquery-1.8.2.min.js" th:src="@{/js/jquery-1.8.2.min.js}"></script>
+    <script src="./js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="./js/main.js" th:src="@{/js/main.js}"></script>
+    <script>
+    /*<![CDATA[*/
+    function addRef(targetId, frontId){
+    	var url = getDomain()+ "/wantref/add";
+    	$.post(url, {frontId : frontId, targetId : targetId}, function(data){
+	    	if(data == 'success') {
+	    		top.window.location = '';
+	    	} else {
+	    		alert("关联失败");
+	    	}
+    	});
+    };
+    
+    function locateTo(url) {
+    	top.window.location = getDomain() + url;
+    }
+    /*]]>*/
+    </script>
+</head>
+<body>
+<div id="alarm-app">
+    <div class="xitong_head" th:include="common/header :: header"></div>
+    <div class="xitong-con" th:include="common/nav :: nav"></div>
+    <div class="xitong_body">
+        <div class="xtbody_head">
+            <button class="bu3" th:onclick="'locateTo(&quot;/myref/list?id=' + ${targetId} + '&quot;)'">我的关联</button>
+            <a class="a2" href="javaScript:;">我要关联</a>
+        </div>
+        <div class="xtbody_con">
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td width="5%">
+                        <p>序号</p>
+                    </td>
+                    <td>
+                        <p>前端设备手机号</p>
+                    </td>
+                    <td>
+                        <p>前端设备安装位置</p>
+                    </td>
+                    <td width="14%">
+                        <p>操作</p>
+                    </td>
+                </tr>
+
+                <tr th:each="wantRef,iterStat : ${pagination.recordList}">
+                    <td>
+                       <p th:text="${iterStat.count + (pagination.currentPage - 1) * pagination.pageSize}">1</p>
+                    </td>
+                    <td>
+                        <p th:text="${wantRef.frontPhone}">13931223100</p>
+                    </td>
+                    <td>
+                        <p th:text="${wantRef.installPosition}">保定</p>
+                    </td>
+                    <td>
+                        <p>
+                            <img id="deleteImg" src="./images/add-icon.png" th:src="@{/images/add-icon.png}" alt="" th:onclick="'addRef('+${targetId}+','+${wantRef.id} +')'" title="添加"  style="cursor: pointer"/>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <!-- 分页 -->
+			<div class="page" th:include="common/pagination :: pagination"></div>
+        </div>
+    </div>
+</div>
+<div id="editPassword-dlg" class="alert-editpass" style="display: none;" th:include="common/editpass :: editpass"></div>
+</body>
+</html>

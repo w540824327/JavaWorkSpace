@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.FrontDeviceMapper" >
+	<resultMap id="BaseResultMap" type="com.ld.model.FrontDevice">
+	   	<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="front_phone" property="frontPhone"/>
+		<result column="battery1" property="battery1"/>
+		<result column="battery2" property="battery2"/>
+		<result column="battery3" property="battery3"/>
+		<result column="install_position" property="installPosition"/>
+		<result column="install_time" property="installTime"/>
+		<result column="signal" property="signal"/>
+		<result column="start_check_time" property="startCheckTime"/>
+		<result column="end_check_time" property="endCheckTime"/>
+		<result column="check_cycle" property="checkCycle"/>
+	</resultMap>
+
+  	<select id="listFrontDevice" resultMap="BaseResultMap">
+  		SELECT id, front_phone, battery1, battery2, battery3, install_position, install_time,
+  			signal, start_check_time, end_check_time, check_cycle
+  		FROM tb_front_device ORDER BY id desc
+  		LIMIT #{pageNum}, #{pageSize}
+  	</select>
+  	<select id="countFrontDevice" resultType="long">
+  		SELECT COUNT(*) FROM tb_front_device;
+  	</select>
+  	
+  	<insert id="insertFrontDevice">
+  		INSERT INTO tb_front_device(front_phone, battery1, battery2, battery3, install_position, install_time, 
+  			start_check_time, end_check_time, check_cycle)
+  		VALUES(#{frontDevice.frontPhone}, #{frontDevice.battery1}, #{frontDevice.battery2},
+  			#{frontDevice.battery3}, #{frontDevice.installPosition}, #{frontDevice.installTime},
+  			#{frontDevice.startCheckTime}, #{frontDevice.endCheckTime},
+  			#{frontDevice.checkCycle})
+  	</insert>
+  	
+  <!-- 	<update id="updateFrontDevice">
+  		UPDATE tb_front_device
+  		SET front_phone=#{frontDevice.frontPhone}, install_time=#{frontDevice.installTime},
+  		install_position=#{frontDevice.installPosition}, start_check_time=#{frontDevice.startCheckTime}, 
+  		check_cycle=#{frontDevice.checkCycle}
+  		WHERE id=#{frontDevice.id}
+  	</update> -->
+  	<update id="updateFrontDevice">
+  		UPDATE tb_front_device
+  		<set>
+  			<if test="frontDevice.frontPhone != null">
+  				front_phone=#{frontDevice.frontPhone},
+  			</if>
+  			<if test="frontDevice.installTime != null">
+  				install_time=#{frontDevice.installTime},
+  			</if>
+  			<if test="frontDevice.installPosition != null">
+  				install_position=#{frontDevice.installPosition},
+  			</if>
+  			<if test="frontDevice.startCheckTime != null">
+  				start_check_time=#{frontDevice.startCheckTime},
+  			</if>
+  			<if test="frontDevice.checkCycle != null">
+  				check_cycle=#{frontDevice.checkCycle}
+  			</if>
+  		</set>
+  		WHERE id=#{frontDevice.id}
+  	</update>
+  	
+  	<delete id="deleteFrontDevice">
+  		DELETE FROM tb_front_device
+  		WHERE id=#{id}
+  	</delete>
+  	
+  	<select id="getFrontDevice" resultMap="BaseResultMap">
+  		SELECT id, front_phone, install_position, install_time, start_check_time, check_cycle
+  		FROM tb_front_device
+  		WHERE id=#{id}
+  	</select>
+  	
+  	<!-- 通过id查询前端设备信息 -->
+	<select id="getFrontDeviceDetail" resultMap="BaseResultMap">
+		SELECT *
+		FROM tb_front_device WHERE id =#{id}
+	</select>
+</mapper>

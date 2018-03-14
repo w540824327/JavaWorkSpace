@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>报警通讯系统</title>
+    <link rel="stylesheet" href="./css/base.css" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" href="./css/xitong.css" th:href="@{/css/xitong.css}"/>
+    <link rel="stylesheet" href="./css/dialog.css" th:href="@{/css/dialog.css}"/>
+    <script src="./js/jquery-1.8.2.min.js" th:src="@{/js/jquery-1.8.2.min.js}"></script>
+    <script src="./js/common.js" th:src="@{/js/common.js}"></script>
+    <script src="./js/dialog.js" th:src="@{/js/dialog.js}"></script>
+    <script src="./js/main.js" th:src="@{/js/main.js}"></script>
+</head>
+<body>
+<div id="alarm-app">
+    <div class="xitong_head" th:include="common/header :: header"></div>
+    <div class="xitong-con" th:include="common/nav :: nav"></div>
+    <div class="xitong_body">
+        <div class="xtbody_head">
+            <button th:if="${session.WEBSITE_USER.userType == '0'}" onclick="deleteDataList('/sms/delete')" class="bu1" type="button">批量删除</button>
+        </div>
+        <div class="xtbody_con">
+            <table id="datalist-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td width="5%">
+                        <input id="selectall-checkbox" style="margin-left: 20px;" type="checkbox" class="checkbox"/>
+                    </td>
+                    <td width="5%">
+                        <p>序号</p>
+                    </td>
+                    <td width="15%">
+                        <p>前端设备手机号</p>
+                    </td>
+                    <td width="15%">
+                        <p>目标手机号</p>
+                    </td>
+                    <td>
+                        <p>短信内容</p>
+                    </td>
+                    <td width="7%">
+                        <p>是否成功</p>
+                    </td>
+                     <td width="16%">
+                        <p>发送时间</p>
+                    </td>
+                    <td width="14%">
+                        <p>操作</p>
+                    </td>
+                </tr>
+
+                <tr th:each="sms,vstat:${pagination.recordList}">
+                    <td>
+                        <input style="margin-left: 20px;" type="checkbox" th:value="${sms.id}" class="checkbox"/>
+                    </td>
+                    <td>
+                        <p th:text="${vstat.count + (pagination.currentPage - 1) * pagination.pageSize}">1</p>
+                    </td>
+                    <td>
+                        <p th:text="${sms.frontPhone}">13931223100</p>
+                    </td>
+                    <td>
+                        <p th:text="${sms.targetPhone}">13931223100</p>
+                    </td>
+                    <td>
+                        <p style="width:230px;overflow:hidden;text-overflow: ellipsis;white-space:nowrap;" th:text="${sms.smsContent}">短信内容</p>
+                    </td>
+                    <td>
+                        <p th:text="${sms.smsSuccess == '1' ? '是' : '否'}">是</p>
+                    </td>
+                    <td>
+                        <p th:text="${sms.smsTime != null} ? ${#dates.format(sms.smsTime, 'yyyy-MM-dd HH:mm:ss')} :''">是</p>
+                    </td>
+                    <td>
+                        <p>
+                            <img th:if="${session.WEBSITE_USER.userType == '0'}" src="./images/delete-icon.png" th:src="@{/images/delete-icon.png}" th:onclick="'deleteRecord(&quot;/sms/delete&quot;,' + ${sms.id} + ')'" alt="" title="删除" style="cursor: pointer"/>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+             <!-- 分页 -->
+			<div class="page" th:include="common/pagination :: pagination"></div>
+        </div>
+    </div>
+</div>
+<div id="editPassword-dlg" class="alert-editpass" style="display: none;" th:include="common/editpass :: editpass"></div>
+</body>
+</html>

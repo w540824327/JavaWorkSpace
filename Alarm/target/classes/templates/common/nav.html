@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>NAV</title>
+</head>
+<body>
+	<div th:fragment="nav" class="xitong-con">
+        <div class="nav-con">
+            <div id="nav-tabs" class="liuge">
+                <div class="first">
+                    <span class="nav-span1" th:class="${currentUrl == '/alarm/record' ? 'nav-click-span1' : 'nav-span1'}">
+                        <a th:style="${currentUrl == '/alarm/record' ? 'color:#c21515' : ''}" th:href="@{/alarm/record}">报警流水记录</a>
+                    </span>
+                </div>
+                <div class="second">
+                    <span class="nav-span2" th:class="${currentUrl == '/front/list' ? 'nav-click-span2' : 'nav-span2'}">
+                        <a th:style="${currentUrl == '/front/list' ? 'color:#c21515' : ''}" th:href="@{/front/list}">前端设备信息管理</a>
+                    </span>
+                </div>
+                <div class="third">
+                    <span class="nav-span3" th:class="${currentUrl == '/target/list' ? 'nav-click-span3' : 'nav-span3'}">
+                        <a th:style="${currentUrl == '/target/list' ? 'color:#c21515' : ''}" th:href="@{/target/list}">目标手机管理</a>
+                    </span>
+                </div>
+                <div class="fourth">
+                    <span class="nav-span4" th:class="${currentUrl == '/sms/list' ? 'nav-click-span4' : 'nav-span4'}">
+                        <a th:style="${currentUrl == '/sms/list' ? 'color:#c21515' : ''}" th:href="@{/sms/list}">短信信息</a>
+                    </span>
+                </div>
+                <div class="fifth">
+                    <span class="nav-span5" th:class="${currentUrl == '/alarm/count' ? 'nav-click-span5' : 'nav-span5'}">
+                        <a th:style="${currentUrl == '/alarm/count' ? 'color:#c21515' : ''}" th:href="@{/alarm/count}">报警信息统计</a>
+                    </span>
+                </div>
+                <div class="sixth">
+                    <span class="nav-span6" th:class="${currentUrl == '/user/list' ? 'nav-click-span6' : 'nav-span6'}">
+                        <a th:style="${currentUrl == '/user/list' ? 'color:#c21515' : ''}" th:href="@{/user/list}">用户管理</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

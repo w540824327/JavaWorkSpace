@@ -1,0 +1,187 @@
+@charset "utf-8";
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+p,
+blockquote,
+pre,
+hr,
+figure,
+table,
+caption,
+th,
+td,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+menu {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft YaHei", 微软雅黑, "宋体", "Arial Narrow", HELVETICA;
+}
+
+a,
+p,
+li {
+    text-decoration: none;
+    /*去掉超链接的下划线。*/
+    list-style: none;
+    /*去掉超链接前面的小圆点。*/
+}
+
+a {
+    color: #333;
+}
+
+/*当输入框被聚焦的时候，也就是当鼠标点击输入框的时候，输入框是没有边框的。*/
+input:focus {
+    outline: none;
+}
+
+/*避免之前写过的div左右浮动对接下来写的div需要添加的浮动产生不必要的影响，就需要用清除浮动。*/
+/*在需要清除浮动的时候，需要在html中的正在写的当前的div之前加一个div，类名为clear。*/
+.clear {
+    clear: both;
+    overflow: hidden;
+}
+
+.page {
+	width: auto;
+	height: 30px;
+	line-height: 30px;
+	margin: 0 auto;
+	padding: 30px 0;
+	margin-left: 13%;
+	text-align: center;
+}
+
+.page ul li {
+	float: left;
+	background: url(../images/page_bj.jpg) repeat-x scroll 0 0;
+	border: 1px solid #e6e6e6;
+	height: 28px;
+	line-height: 28px;
+	min-width: 32px;
+	margin: 0 2px;
+}
+
+.page ul li:hover {
+	border: 1px solid #2359a3;
+}
+
+.page ul li.current {
+	background: #2359a3;
+	border: 1px solid #2359a3;
+}
+
+.page ul li.current a {
+	color: #FFFFFF;
+}
+
+.page ul li:visited {
+	background: #2359a3;
+	border: 1px solid #2359a3;
+}
+
+.page ul li:visited a {
+	color: #FFFFFF;
+}
+
+.page ul li a {
+	width: 100%;
+	display: block;
+}
+
+.page ul li.tz_to {
+	background: none;
+	border: 0px;
+}
+
+.page ul li.tz_inp {
+	padding: 0;
+}
+
+.page ul li.tz_inp input {
+	border: 0;
+	background: none;
+	text-indent: 10px;
+	height: 28px;
+	line-height: 28px;
+}
+
+.nav-click-span1 {
+	display: inline-block;
+	text-indent: 23px;
+	height: 42px;
+	line-height: 42px;
+	background: url("../images/record-hover.png") 0 center no-repeat;
+	background-size: 26px 26px;
+	border-bottom: 3px solid #c21515;
+}
+
+.nav-click-span2 {
+	display: inline-block;
+	text-indent: 21px;
+	height: 42px;
+	line-height: 42px;
+	background: url("../images/shebei-hover.png") 0 center no-repeat;
+	background-size: 17px 17px;
+	border-bottom: 3px solid #c21515;
+}
+
+.nav-click-span3 {
+	display: inline-block;
+	text-indent: 21px;
+	height: 42px;
+	line-height: 42px;
+	background: url("../images/phone-hover.png") 0 center no-repeat;
+	background-size: 22px 22px;
+	border-bottom: 3px solid #c21515;
+}
+
+.nav-click-span4 {
+	display: inline-block;
+	text-indent: 23px;
+	height: 42px;
+	line-height: 42px;
+	background: url("../images/message-hover.png") 0 center no-repeat;
+	background-size: 20px 20px;
+	border-bottom: 3px solid #c21515;
+}
+
+.nav-click-span5 {
+	display: inline-block;
+	text-indent: 23px;
+	height: 42px;
+	line-height: 42px;
+	background: url("../images/alarm-hover.png") 0 center no-repeat;
+	background-size: 22px 22px;
+	border-bottom: 3px solid #c21515;
+}
+
+.nav-click-span6 {
+	display: inline-block;
+	text-indent: 24px;
+	height: 42px;
+	line-height: 42px;
+	background: url("../images/user-hover.png") 0 center no-repeat;
+	background-size: 26px 26px;
+	border-bottom: 3px solid #c21515;
+}
+

@@ -1,0 +1,16 @@
+package com.gp.test;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.gp.service.User;
+
+public class TestUser {
+   public static void main(String[] args) {
+    
+ //spring容器是在此处进行初始化的，对象的创建是有spring容器创建的，此处加载容器，
+    //通过getBean来获取对象，里面的参数是由xml文件中bean标签的id
+ ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
+ User user=(User) context.getBean("user");
+    user.show();
+  }
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.SmsMapper" >
+	<resultMap id="BaseResultMap" type="com.ld.model.SmsInfo">
+	   	<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="front_phone" property="frontPhone"/>
+		<result column="target_phone" property="targetPhone"/>
+		<result column="sms_content" property="smsContent"/>
+		<result column="sms_success" property="smsSuccess"/>
+		<result column="sms_time" property="smsTime"/>
+	</resultMap>
+
+	<!-- 分页查询短信信息 -->
+	<select id="listSmsInfo" resultMap="BaseResultMap">
+		SELECT id, front_phone, target_phone, sms_content, sms_success, sms_time
+		FROM tb_sms_info ORDER BY id desc
+		LIMIT ${pageNum}, ${pageSize}
+	</select>
+	<select id="countSmsInfo" resultType="long">
+		SELECT COUNT(*) FROM tb_sms_info;
+	</select>
+	
+	<delete id="deleteSmsInfo">
+		DELETE FROM tb_sms_info
+		WHERE id=#{smsId}
+	</delete>
+	
+	<!-- 查询短信累计数 -->
+ 	<select id="countSmsInfoNot1" resultType="long">
+ 		SELECT COUNT(*) FROM tb_sms_info 
+ 		WHERE front_phone = #{frontPhone}
+ 	</select>
+  	
+  	<!-- 查询短信发送成功数 -->
+  	<select id="countSmsSuccess" resultType="long">
+  		SELECT COUNT(*) FROM tb_sms_info 
+  		WHERE front_phone = #{frontPhone} AND sms_success='1';
+  	</select>
+  	
+  	<!-- 查询目标手机短信接收成功数 -->
+  	<select id="countTargetSms" resultType="long">
+  		SELECT COUNT(*) FROM tb_sms_info 
+  		WHERE target_phone = #{targetPhone} AND sms_success='1';
+  	</select>
+</mapper>

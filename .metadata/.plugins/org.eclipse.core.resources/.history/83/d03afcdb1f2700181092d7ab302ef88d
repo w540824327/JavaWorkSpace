@@ -1,0 +1,32 @@
+
+
+import org.springframework.boot.*;
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@EnableAutoConfiguration
+
+public class Helloworld {
+	@SpringbootApplication
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(Helloworld.class, args);
+    }
+	@RequestMapping("/")
+//    @RequestMapping("/test/{value1}")
+    @ResponseBody
+    String home() {
+//    	int a=new run1().runto();
+        return "Hello World!";
+    }
+//    @RequestMapping("/show/{value2}")
+//    private class run1{
+//    	public int runto()
+//    	{
+//    		return 1;
+//    	}
+//    	
+//    }
+
+}

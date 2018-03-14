@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.TargetPhoneMapper" >
+	<resultMap id="BaseResultMap" type="com.ld.model.TargetPhone">
+	   	<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name"/>
+		<result column="target_phone" property="targetPhone"/>
+		<result column="sms_count" property="smsCount"/>
+		<result column="sms_price" property="smsPrice"/>
+		<result column="prepay_money" property="prepayMoney"/>
+		<result column="remain_money" property="remainMoney"/>
+		<result column="sms_send" property="smsSend"/>
+	</resultMap>
+
+	<resultMap id="FrontAndTargetMap" type="com.ld.model.FrontAndTarget">
+	   	<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="front_phone" property="frontPhone"/>
+		<result column="install_position" property="installPosition"/>
+	</resultMap>
+	
+	<resultMap id="FrontDeviceMap" type="com.ld.model.FrontDevice">
+	   	<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="front_phone" property="frontPhone"/>
+		<result column="install_position" property="installPosition"/>
+	</resultMap>
+	
+  <select id="listTargetPhone" resultMap="BaseResultMap">
+  	SELECT id, name, target_phone, sms_count, sms_price, prepay_money, remain_money, sms_send
+  	FROM tb_target_phone ORDER BY id desc
+  	LIMIT #{pageNum}, #{pageSize}
+  </select>
+  
+  <select id="countPhone" resultType="long">
+  	SELECT COUNT(*) FROM tb_target_phone
+  </select>
+  
+  <select id="getTartgetPhoneById" resultMap="BaseResultMap">
+  	SELECT id, name, target_phone, sms_price, prepay_money,remain_money, sms_send
+  	FROM tb_target_phone
+  	WHERE id = #{id}
+  </select>
+  
+  <insert id="insertTargetPhone" parameterType="TargetPhone">
+  	INSERT INTO tb_target_phone (name, target_phone,sms_price,prepay_money,remain_money,sms_send)
+  	VALUES(#{phone.name}, #{phone.targetPhone}, #{phone.smsPrice}, #{phone.prepayMoney},#{phone.remainMoney},#{phone.smsSend})
+  </insert>
+  
+  <update id="updateTargetPhone" parameterType="TargetPhone">
+	UPDATE tb_target_phone
+	<set>
+      <if test="phone.name != null">
+      	name = #{phone.name},
+      </if>
+      <if test="phone.targetPhone != null">
+      	target_phone = #{phone.targetPhone},
+      </if>
+      <if test="phone.smsPrice != null">
+      	sms_price = #{phone.smsPrice},
+      </if>
+      <if test="phone.prepayMoney != null">
+      	prepay_money = #{phone.prepayMoney},
+      </if>
+      <if test="phone.remainMoney != null">
+      	remain_money = #{phone.remainMoney},
+      </if>
+      <if test="phone.smsSend != null">
+      	sms_send = #{phone.smsSend}
+      </if>
+    </set>
+  	WHERE id = #{phone.id}
+  </update>
+  
+  <delete id="deleteTargetPhone">
+  	DELETE FROM tb_target_phone
+  	WHERE id = #{id}
+  </delete>
+  
+  
+   <!-- 目标手机关联前端设备部分 -->
+   
+   
+   <select id="listMyRef" resultMap="FrontAndTargetMap">
+  	SELECT  a.id, a.front_id, a.target_id , b.front_phone, b.install_position
+  	FROM tb_front_target AS a
+  	LEFT JOIN tb_front_device AS b ON
+  	a.front_id = b.id
+  	WHERE target_id = #{targetId}
+  	LIMIT #{pageNum}, #{pageSize}
+  </select>
+  
+  <select id="countMyRef" resultType="long">
+  	SELECT COUNT(*) FROM tb_front_target 
+  	WHERE target_id = #{targetId}
+  </select>
+    
+  <delete id="deleteMyRef">
+  	DELETE FROM tb_front_target 
+  	WHERE id = #{id}
+  </delete> 
+  
+  <delete id="deleteMyRefByFrontId">
+  	DELETE FROM tb_front_target 
+  	WHERE front_id = #{frontId}
+  </delete> 
+  
+  <!-- 我要关联 -->
+  
+  <select id="listWantRef" resultMap="FrontDeviceMap">
+  	SELECT a.id, a.front_phone, a.install_position
+    FROM tb_front_device As a 
+    WHERE (SELECT count(1) FROM tb_front_target AS b WHERE b.target_id = #{targetId} AND a.id = b.front_id) = 0
+    LIMIT #{pageNum}, #{pageSize} 
+  </select>
+  
+   <select id="countWantRef" resultType="long">
+  	SELECT COUNT(*)
+    FROM tb_front_device As a 
+    WHERE (SELECT count(1) FROM tb_front_target AS b WHERE b.target_id = #{targetId} AND a.id = b.front_id) = 0 
+  </select>
+  
+  <insert id="insertRef">
+  	INSERT INTO tb_front_target (front_id, target_id)
+  	VALUES(#{frontId}, #{targetId})
+  </insert>
+  
+</mapper>

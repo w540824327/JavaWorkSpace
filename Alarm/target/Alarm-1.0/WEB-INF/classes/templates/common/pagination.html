@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>PAGINATION</title>
+</head>
+<body>
+	<!-- 分页 -->
+	<div th:fragment="pagination" class="page">
+		<ul th:if="${pagination.pageCount gt 1}">
+			<!-- 前一页 -->
+			<li th:if="${pagination.currentPage gt 1}">
+				<a th:href="'javascript:gotoPage(' + ${pagination.currentPage - 1} + ')'"><img src="images/left_page.jpg" th:src="@{/images/left_page.jpg}" /></a>
+			</li>
+
+			<!-- 首页 -->
+			<li th:if="${pagination.startIndex != 1}">
+				<a href="javascript:gotoPage('1')">1</a>
+			</li>
+
+			<!-- ... -->
+			<li th:if="${pagination.startIndex - 1 gt 1}" style="border: none; background: none;">...</li>
+
+			<!-- 页码 -->
+			<ul th:each="index,indexStat:${pagination.indexList}">
+				<li th:if="${index == pagination.currentPage}" class="current">
+					<a href="javascript:void(0)" th:text="${index}">2</a>
+				</li>
+				<li th:if="${index != pagination.currentPage}">
+					<a th:href="'javascript:gotoPage(' + ${index} + ')'" th:text="${index}">3</a>
+				</li>
+			</ul>
+
+			<!-- ... -->
+			<li th:if="${pagination.endIndex - pagination.pageCount lt -1}" style="border: none; background: none;">...</li>
+
+			<!-- 尾页 -->
+			<li th:if="${pagination.endIndex != pagination.pageCount}">
+				<a th:href="'javascript:gotoPage(' + ${pagination.pageCount} + ')'" th:text="${pagination.pageCount}">100</a>
+			</li>
+
+			<!-- 后一页 -->
+			<li th:if="${pagination.currentPage lt pagination.pageCount}">
+				<a th:href="'javascript:gotoPage(' + ${pagination.currentPage + 1} + ')'"><img src="images/right_page.jpg" th:src="@{/images/right_page.jpg}" /></a>
+			</li>
+		</ul>
+	</div>
+	<!-- 分页结束 -->
+</body>
+</html>

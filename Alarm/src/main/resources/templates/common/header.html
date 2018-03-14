@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>HEADER</title>
+</head>
+<body>
+	<div class="xitong_head" th:fragment="header">
+        <div class="xthead_left">
+            <img src="./images/fei.png" th:src="@{/images/fei.png}" alt=""/>
+            <p>非凡电气</p>
+        </div>
+        <div class="test-left">
+            <img src="./images/headxie.png" th:src="@{/images/headxie.png}" alt=""/>
+        </div>
+        <div class="xthead_right">
+            <div class="xtheadr_left">
+                <p>报警通讯系统</p>
+            </div>
+            <div class="xtheadr_right">
+                <p class="p1"><script>document.write(getCurrentDate());</script></p>
+                <p class="p2" th:text="'您好, ' + ${session.WEBSITE_USER == null ? '' : session.WEBSITE_USER.username}">您好，admin</p>
+                <span class="span1" onclick="editPasswordDlg()">
+                    <a>修改密码</a>
+                </span>
+                <span class="span2" onclick="logout()">
+                    <a>退出登录</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

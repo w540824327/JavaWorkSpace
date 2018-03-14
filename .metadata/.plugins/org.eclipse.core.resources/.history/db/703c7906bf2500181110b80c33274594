@@ -1,0 +1,6 @@
+package com.csdn.springboot;
+
+public class Snippet {
+	Tomcat started on
+}
+

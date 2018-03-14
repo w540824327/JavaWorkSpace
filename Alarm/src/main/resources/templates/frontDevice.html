@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>报警通讯系统</title>
+	<link rel="stylesheet" href="./css/base.css" th:href="@{/css/base.css}" />
+	<link rel="stylesheet" href="./css/xitong.css" th:href="@{/css/xitong.css}" />
+	<link rel="stylesheet" href="./css/dialog.css" th:href="@{/css/dialog.css}" />
+	<script src="./js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+	<script src="./js/dialog.js" th:src="@{/js/dialog.js}"></script>
+	<script src="./js/jquery-1.8.2.min.js" th:src="@{/js/jquery-1.8.2.min.js}"></script>
+	<script src="./js/common.js" th:src="@{/js/common.js}"></script>
+	<script src="./js/main.js" th:src="@{/js/main.js}"></script>
+	<script>
+	/*<![CDATA[*/
+		function addDlg() {
+			myDialog.show({
+				eleId : 'add-dlg',
+				title : '前端设备信息添加',
+				width : 630
+			});
+		}
+	
+		 function detailDlg(id) {
+			var action = getDomain() + "/front/detail?id=" + id;
+			$.get(action, function(data) {
+				if (data != null) {
+					if(data.frontPhone != null){
+						$("#detailPhone").text(data.frontPhone);
+					} else {
+						$("#detailPhone").text('');
+					}
+					if(data.battery1 != null){
+						$('#detailBattery1').text(data.battery1);
+					} else {
+						$('#detailBattery1').text('');
+					}
+					if(data.battery2 != null){
+						$('#detailBattery2').text(data.battery2);
+					} else {
+						$('#detailBattery2').text('');
+					}
+					if(data.battery3 != null){
+						$('#detailBattery3').text(data.battery3);
+					} else {
+						$('#detailBattery3').text('');
+					} 
+					if(data.startCheckTime != null){
+						var startCheckTime = myFormat(data.startCheckTime);
+						$('#detailStartCheckTime').text(startCheckTime);
+					} else {
+						$('#detailStartCheckTime').text('');
+					}
+					if(data.installTime != null){
+						var installTime = myFormat(data.installTime);
+						$('#detailInstallTime').text(installTime);
+					} else {
+						$('#detailInstallTime').text('');
+					}
+					if(data.checkCycle != null){
+						$('#detailCheckCycle').text(data.checkCycle);
+					} else {
+						$('#detailCheckCycle').text('');
+					}
+					if(data.installPosition != null){
+						$('#detailInstallPosition').text(data.installPosition);
+					} else {
+						$('#detailInstallPosition').text('');
+					}
+				}
+				myDialog.show({
+					eleId : 'detail-dlg',
+					title : '前端设备信息详情',
+					width : 430
+				});
+			}); 
+		}
+	
+		function editDlg(id) {
+			var action = getDomain() + "/front/get?id=" + id;
+			$.get(action, function(data) {
+				if (data != null) {
+					$('#editfront-form').find('input[name=id]').val(data.id);
+					$('#editfront-form').find('input[name=frontPhone]').val(data.frontPhone);
+					var installTime = myFormat(data.installTime);
+					$('#editfront-form').find('input[name=installTime]').val(installTime);
+					$('#editfront-form').find('input[name=installPosition]').val(data.installPosition);
+					var startCheckTime = myFormat(data.startCheckTime);
+					$('#editfront-form').find('input[name=startCheckTime]').val(startCheckTime);
+					$('#editfront-form').find('input[name=checkCycle]').val(data.checkCycle);
+				}
+			});
+			myDialog.show({
+				eleId : 'edit-dlg',
+				title : '前端设备信息修改',
+				width : 360
+			});
+		}
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div id="alarm-app">
+		<div class="xitong_head" th:include="common/header :: header"></div>
+		<div class="xitong-con" th:include="common/nav :: nav"></div>
+		<div class="xitong_body">
+			<div class="xtbody_head">
+				<button th:if="${session.WEBSITE_USER.userType == '0'}" class="bu1"
+					type="button" onclick="addDlg()">新增</button>
+				<button th:if="${session.WEBSITE_USER.userType == '0'}" class="bu2"
+					type="button" onclick="deleteDataList('/front/delete')">批量删除</button>
+			</div>
+			<div class="xtbody_con">
+				<table id="datalist-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr height="42px">
+						<td width="5%">
+							<input id="selectall-checkbox" style="margin-left: 20px;" type="checkbox" class="checkbox" /></td>
+						<td width="5%">
+							<p>序号</p>
+						</td>
+						<td width="12%">
+							<p>手机号</p>
+						</td>
+						<td width="6%">
+							<p>电池1</p>
+						</td>
+						<td width="6%">
+							<p>电池2</p>
+						</td>
+						<td width="6%">
+							<p>电池3</p>
+						</td>
+						<td>
+							<p>安装位置</p>
+						</td>
+						<td width="16%">
+							<p>安装时间</p>
+						</td>
+						<td width="14%">
+							<p>操作</p>
+						</td>
+					</tr>
+					<tr th:each="frontDevice,vstat:${pagination.recordList}">
+						<td>
+							<input style="margin-left: 20px;" type="checkbox" th:value="${frontDevice.id}" class="checkbox" />
+						</td>
+						<td>
+							<p th:text="${vstat.count + (pagination.currentPage - 1) * pagination.pageSize}">1</p>
+						</td>
+						<td>
+							<p th:text="${frontDevice.frontPhone}">13931223100</p>
+						</td>
+						<td>
+							<p th:text="${frontDevice.battery1}">1</p>
+						</td>
+						<td>
+							<p th:text="${frontDevice.battery2}">2</p>
+						</td>
+						<td>
+							<p th:text="${frontDevice.battery3}">3</p>
+						</td>
+						<td>
+							<p th:text="${frontDevice.installPosition}">莲池区</p>
+						</td>
+						<td>
+							<p
+								th:text="${frontDevice.installTime != null} ? ${#dates.format(frontDevice.installTime, 'yyyy-MM-dd HH:mm:ss')} : '' ">2013-09-09</p>
+						</td>
+						<td>
+							<p>
+								<img src="./images/view-icon.png" th:src="@{/images/view-icon.png}" alt="" title="查看" th:onclick="'detailDlg(' + ${frontDevice.id} + ')'" style="cursor: pointer" /> 
+								<img th:if="${session.WEBSITE_USER.userType == '0'}" class="editimg" src="./images/edit-icon.png" th:src="@{/images/edit-icon.png}" 
+									th:onclick="'editDlg(' + ${frontDevice.id} + ')'" alt="" title="修改" style="cursor: pointer" /> 
+								<img th:if="${session.WEBSITE_USER.userType == '0'}" class="deleteimg" src="./images/delete-icon.png"
+									th:src="@{/images/delete-icon.png}" th:onclick="'deleteRecord(&quot;/front/delete&quot;,' + ${frontDevice.id} + ')'"
+									alt="" title="删除" style="cursor: pointer" />
+							</p>
+						</td>
+					</tr>
+				</table>
+				<!-- 分页 -->
+				<div class="page" th:include="common/pagination :: pagination"></div>
+			</div>
+		</div>
+	</div>
+	<!-- 添加前端设备信息 -->
+	<div id="add-dlg" class="alert-add" style="display: none;">
+		<form id="addfront-form" method="post">
+			<table border="0" cellspacing="0" cellpadding="0" width="600">
+				<tr>
+					<td width="23%" height="40" style="background: #f4f4f4; text-align: right;">
+						<label>手机号：</label>
+					</td>
+					<td>
+						<input type="text" name="frontPhone" width="35%" required="required" />
+					</td>
+					<td width="13%" height="40" style="background: #f4f4f4; text-align: right;">
+						<label>电池1：</label>
+					</td>
+					<td>
+						<input type="text" name="battery1" width="35%" required="required" />
+					</td>
+				</tr>
+				<tr>
+					<td width="23%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>电池2：</label>
+					</td>
+					<td>
+						<input type="text" name="battery2" width="35%" required="required" />
+					</td>
+					<td width="13%" height="40" style="background: #f4f4f4; text-align: right;">
+						<label>电池3：</label>
+					</td>
+					<td>
+						<input type="text" name="battery3" width="35%" required="required" />
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>开始自检时间：</label>
+					</td>
+					<td>
+						<input class="Wdate" type="text" name="startCheckTime"
+							required="required" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+						    style="height: 23px; width: 183px" />
+				    </td>
+					<td width="15%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>自检周期：</label>
+					</td>
+					<td>
+						<input class="zijian" type="text" name="checkCycle" required="required" />天
+					</td>
+				</tr>
+				<tr>
+					<td width="23%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>安装时间：</label>
+					</td>
+					<td colspan="3">
+						<input class="Wdate" type="text" name="installTime" required="required"
+							onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="height: 23px; width: 183px" />
+					</td>
+				</tr>
+				<tr>
+					<td width="23%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>安装位置：</label>
+					</td>
+					<td colspan="3">
+						<input class="anzhuang" type="text" name="installPosition" required="required" />
+					</td>
+				</tr>
+			</table>
+		</form>
+		<button id="reset-addfront" class="but1" type="button">重置</button>
+		<button id="ok-addfront" class="but2" type="button">添加</button>
+	</div>
+
+	<!-- 查看前端设备信息 -->
+	<div id="detail-dlg" class="alert-detail" style="display: none;">
+		<form id="detailfront-form" method="post">
+			<table border="0" cellspacing="0" cellpadding="0" width="400">
+				<tr>
+					<td width="23%" height="40"
+						style="background: #f4f4f4; text-align: right;"><label>手机号：</label>
+					</td>
+					<td>
+					 <p id="detailPhone"></p>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="23%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>电池1：</label>
+					</td>
+					<td>
+					 <p id="detailBattery1"> </p>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="23%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>电池2：</label>
+					</td>
+					<td>
+						<p id="detailBattery2"> </p>
+					</td>
+				</tr>
+				<tr>
+					<td width="23%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>电池2：</label>
+					</td>
+					<td>
+						<p id="detailBattery3"> </p>
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>开始自检时间：</label>
+					</td>
+					<td>
+					 	<p id="detailStartCheckTime"> </p>
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>自检周期：</label>
+					</td>
+					<td>
+						<p id="detailCheckCycle"> </p>
+					</td>
+				</tr>
+				<tr>
+					<td width="23%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>安装时间：</label>
+					</td>
+					<td>
+						<p id="detailInstallTime"> </p>
+					</td>
+				</tr>
+				<tr>
+					<td width="23%" height="40"
+						style="background: #f4f4f4;text-align: right;"><label>安装位置：</label>
+					</td>
+					<td>
+						<p id="detailInstallPosition"> </p>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	<!-- 修改前端设备信息 -->
+	<div id="edit-dlg" class="alert-edit" style="display: none;">
+		<form id="editfront-form" method="post">
+			<input type="hidden" name="id" />
+			<table border="0" cellspacing="0" cellpadding="0" width="330">
+				<tr>
+					<td width="30%" height="40" style="background: #f4f4f4; text-align: right;">
+						<label>手机号：</label>
+					</td>
+					<td colspan="3">
+						<input type="text" name="frontPhone" width="35%" required="required" />
+					</td>
+				</tr>
+				<tr>
+					<td width="30%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>开始自检时间：</label>
+					</td>
+					<td colspan="3" width="35%">
+						<input class="Wdate" type="text" name="startCheckTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+							style="height: 23px; width: 183px" required="required" />
+					</td>
+				</tr>
+				<tr>
+					<td width="30%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>自检周期：</label>
+					</td>
+					<td colspan="3" width="35%">
+						<input type="text" name="checkCycle" required="required" />
+					</td>
+				</tr>
+				<tr>
+					<td width="30%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>安装时间：</label>
+					</td>
+					<td colspan="3" width="35%">
+						<input class="Wdate" type="text" name="installTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+							style="height: 23px; width: 183px" required="required" />
+					</td>
+				</tr>
+				<tr>
+					<td width="30%" height="40" style="background: #f4f4f4;text-align: right;">
+						<label>安装位置：</label>
+					</td>
+					<td colspan="3" width="35%">
+						<input type="text" name="installPosition" required="required" />
+					</td>
+				</tr>
+			</table>
+		</form>
+		<button id="reset-editfront" class="but1" type="button">重置</button>
+		<button id="ok-editfront" class="but2" type="button">确定</button>
+	</div>
+	<div id="editPassword-dlg" class="alert-editpass"
+		style="display: none;" th:include="common/editpass :: editpass"></div>
+</body>
+</html>

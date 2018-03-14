@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>报警通讯系统-登录</title>
+    <link rel="stylesheet" href="./css/xitonglogin.css" th:href="@{/css/xitonglogin.css}"/>
+    <script src="./js/jquery-1.8.2.min.js" th:src="@{/js/jquery-1.8.2.min.js}"></script>
+    <script src="./js/login.js" th:src="@{/js/login.js}"></script>
+</head>
+<body>
+	<div id="app">
+	    <div class="login-header">
+	        <img src="./images/xtlogin-logo.png" th:src="@{/images/xtlogin-logo.png}" alt=""/>
+	    </div>
+	    <div class="login-main">
+	    	<form id="login-form" th:action="@{/user/login}" method="post">
+		        <div class="left-side">
+		            <div class="left-rect"></div>
+		            <div class="left-img">
+		                <img src="./images/xtlogin-left.png" th:src="@{/images/xtlogin-left.png}" alt=""/>
+		            </div>
+		        </div>
+		
+		        <div class="login-content">
+		            <div class="login-contenthead">
+		                <p>用户登录</p>
+		            </div>
+		            <div class="login-contentbody">
+		                <div class="user-typeleft">
+		                    <input id="admin" type="radio" name="userType" value="0" checked="checked"/><label for="admin">管理员</label>
+		                </div>
+		                <div class="user-typeright">
+		                    <input class="custom" id="custom" type="radio" value="1" name="userType"/><label for="custom">普通用户</label>
+		                </div>
+		            </div>
+		            <div class="login-contentform">
+		                <div class="first">
+		                    <div class="first-left"></div>
+		                    <div class="first-right">
+		                        <input type="text" name="username" placeholder="用户名"/>
+		                    </div>
+		                </div>
+		                <div class="second">
+		                    <div class="second-left"></div>
+		                    <div class="second-right">
+		                        <input type="password" name="password" placeholder="密码"/>
+		                    </div>
+		                </div>
+		                <div class="third">
+		                    <div class="third-left"></div>
+		                    <div class="third-right">
+		                        <input type="text" name="checkCode" placeholder="验证码"/>
+		                    </div>
+		                </div>
+		
+		                <div class="check-code">
+		                	<img id="login-checkcode" style="cursor: pointer;" th:src="@{/user/checkcode}" alt=""/>
+		                </div>
+		            </div>
+		
+		            <div id="login-btn" class="login-contentfoot"></div>
+		        </div>
+		
+		        <div class="right-side">
+		            <div class="right-img">
+		                <img src="./images/xtlogin-right.png" th:src="@{/images/xtlogin-right.png}" alt=""/>
+		            </div>
+		            <div class="right-rect"></div>
+		        </div>
+	        </form>
+	    </div>
+	</div>
+</body>
+</html>

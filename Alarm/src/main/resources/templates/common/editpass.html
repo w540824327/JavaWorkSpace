@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>EDITPASS</title>
+</head>
+<body>
+	<!-- 修改密码 -->
+	<div th:fragment="editpass" id="editPassword-dlg" class="alert-editpass" style="display: none;">
+		<form id="editpass-form" action="@{/user/editpass}" method="post">
+		    <table border="0" cellspacing="0" cellpadding="0" width="330">
+		        <tr>
+		            <td width="15%" height="40" style="background: #f4f4f4;text-align: right;">
+		                <label>旧密码：</label>
+		            </td>
+		            <td colspan="3" width="35%">
+		                <input name="oldPass" type="password" width="35%" required="required"/>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td width="15%" height="40" style="background: #f4f4f4; text-align: right;">
+		                <label>新密码：</label>
+		            </td>
+		            <td colspan="3">
+		                <input name="newPass" type="password" width="35%" required="required"/>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td width="15%" height="40" style="background: #f4f4f4;text-align: right;">
+		                <label>确认密码：</label>
+		            </td>
+		            <td colspan="3" width="35%">
+		                <input name="confirmPass" type="password" width="35%" required="required"/>
+		            </td>
+		        </tr>
+		    </table>
+	    </form>
+	    <button id="reset-pass" class="but1" type="button">重置</button>
+	    <button id="ok-pass" class="but2" type="button">确定</button>
+	</div>
+</body>
+</html>

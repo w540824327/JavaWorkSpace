@@ -1,0 +1,7 @@
+<html>
+<body>
+<form action="#" th:action="@{/}" th:object="${personForm}" method="post">
+
+</form>
+</body>
+</html>
